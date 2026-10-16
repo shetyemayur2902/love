@@ -1,0 +1,141 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Namrata's Extremely Important Mission 💗</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:18px;
+font-family:system-ui,sans-serif;color:#69354f;
+background:linear-gradient(145deg,#ffe0ed,#fff8fb,#eae2ff)}
+.card{width:min(100%,440px);padding:27px 21px;text-align:center;
+background:#ffffffdf;border:1px solid white;border-radius:28px;
+box-shadow:0 20px 65px #b74c7b20;position:relative;overflow:hidden}
+.pill{display:inline-block;padding:7px 12px;border-radius:99px;
+background:#fff0f6;color:#cf477e;font-size:11px;font-weight:900}
+h1{font-size:clamp(27px,8vw,37px);line-height:1.12;margin:17px 0 10px;
+letter-spacing:-1.2px}
+p{line-height:1.65;color:#88647a}
+.big{font-size:65px;margin:13px 0;animation:bob 1.8s infinite}
+button{border:0;border-radius:15px;padding:13px 17px;margin:5px;
+background:#ff78a7;color:white;font-weight:850;font-size:14px;
+cursor:pointer;transition:transform .15s}
+button:active{transform:scale(.94)}
+.secondary{background:#f1eaff;color:#865b9e}
+.progress{height:6px;background:#f5e1ec;border-radius:99px;margin:20px 0;overflow:hidden}
+#bar{height:100%;width:0;background:#ff78a7;transition:width .3s}
+#message{background:#fff0f6;border-radius:17px;padding:15px;
+min-height:60px;line-height:1.6;margin:15px 0}
+#choices{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}
+.hidden{display:none!important}
+.small{font-size:11px;color:#b08ba0}
+.heart{position:fixed;bottom:-30px;animation:up 3s forwards;pointer-events:none}
+@keyframes up{to{transform:translateY(-110vh) rotate(35deg);opacity:0}}
+@keyframes bob{50%{transform:translateY(-7px) rotate(4deg)}}
+</style>
+</head>
+<body>
+<main class="card">
+ <div class="pill" id="stage">TOP SECRET MISSION 💌</div>
+ <div class="progress"><div id="bar"></div></div>
+ <div class="big" id="emoji">🐰</div>
+ <h1 id="title">Namrata, a tiny task for you.</h1>
+ <p id="desc">Mayur has an extremely important surprise. It will take approximately 3 seconds. Probably.</p>
+ <div id="message">Your mission begins when you tap the button. No pressure, agent cutie. 💗</div>
+ <div id="choices">
+  <button id="go">Okay, show me! ✨</button>
+ </div>
+ <p class="small" id="foot">Made with love and unnecessary drama by Mayur.</p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let step=0,taps=0,quiz=0;
+function hearts(n=8){
+ for(let i=0;i<n;i++){
+  let e=document.createElement("span");
+  e.className="heart";
+  e.textContent=["💗","💕","✨","💘","🌸"][Math.floor(Math.random()*5)];
+  e.style.left=Math.random()*95+"vw";
+  e.style.fontSize=(18+Math.random()*18)+"px";
+  e.style.animationDelay=Math.random()*.6+"s";
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),3300);
+ }
+}
+function screen(s,e,t,d,m,buttons){
+ $("stage").textContent=s;$("emoji").textContent=e;
+ $("title").textContent=t;$("desc").textContent=d;
+ $("message").textContent=m;$("choices").innerHTML="";
+ $("bar").style.width=(step/7*100)+"%";
+ buttons.forEach(b=>{
+  const x=document.createElement("button");
+  x.textContent=b.label;
+  if(b.secondary)x.className="secondary";
+  x.onclick=b.fn;$("choices").appendChild(x);
+ });
+}
+function next(){step++;render()}
+function render(){
+ if(step===0){
+  screen("MISSION START","🐰","Namrata, a tiny task for you.",
+   "Mayur has an extremely important surprise. It will take approximately 3 seconds. Probably.",
+   "Your mission begins when you tap the button. 💗",
+   [{label:"Okay, show me! ✨",fn:next}]);
+ }else if(step===1){
+  screen("SECURITY CHECK","🧐","Are you REALLY ready?",
+   "This website has detected a very cute person. Confirm identity.",
+   "Please select the scientifically correct answer.",
+   [{label:"It's me, obviously 😌",fn:next},{label:"I'm a potato 🥔",secondary:true,fn:()=>{hearts(3);$("message").textContent="Potato identity accepted. Potatoes can continue too. 😂"}}]);
+ }else if(step===2){
+  taps=0;
+  screen("TASK 01 OF TOO MANY","💗","Tap the heart 10 times.",
+   "Every tap brings you closer to the surprise. Probably.",
+   "Taps: 0 / 10",
+   [{label:"TAP THE HEART 💖",fn:tapHeart}]);
+ }else if(step===3){
+  screen("GREAT SUCCESS","🎉","YOU DID IT!!",
+   "You have officially completed the mission.",
+   "Wait. Why is there another button? That's weird.",
+   [{label:"Collect my prize 🏆",fn:next}]);
+ }else if(step===4){
+  screen("ONE LAST THING","👀","Actually… one tiny question.",
+   "What should Mayur send you right now?",
+   "Choose wisely. The bunny is watching.",
+   [{label:"A hug 🫂",fn:()=>answer("hug")},{label:"Chocolate 🍫",fn:()=>answer("chocolate"),secondary:true},{label:"Unlimited naps 😴",fn:()=>answer("nap"),secondary:true}]);
+ }else if(step===5){
+  screen("BONUS ROUND","🐣","You thought you were finished?",
+   "The button is very shy. Give it a little encouragement.",
+   "Tap below to make the surprise appear.",
+   [{label:"Reveal the surprise 🎁",fn:()=>{hearts(14);next()}}]);
+ }else{
+  $("bar").style.width="100%";
+  screen("MISSION COMPLETE","💌","Namrata, this part is real.",
+   "All the silly taps were just Mayur's way of getting you here.",
+   "I'm sorry if I hurt you. Your feelings matter to me, and I want to listen and understand—not rush you to feel okay. You don't owe me an instant reply or a smile. I care about you, and I want to do better through my actions, not just words. Love, Mayur. 💗",
+   [{label:"Send me a virtual hug 🫂",fn:()=>{hearts(24);$("message").textContent="Hug delivered! Hold for five seconds. No need to say anything. Just a little warmth from Mayur. 💗";$("emoji").textContent="🫂"}},{label:"One more heart 💖",secondary:true,fn:()=>hearts(15)}]);
+ }
+}
+function tapHeart(){
+ taps++;hearts(1);
+ const left=10-taps;
+ $("message").textContent=taps<4?`Tap number ${taps}! This is going extremely well. 😌`:
+ taps<8?`${taps} taps?! The bunny is getting emotional. 🥹`:
+ left>0?`Only ${left} more. Promise this is the last set. Probably. 😂`:
+ "TEN! You have defeated the heart. The heart has filed a complaint.";
+ if(taps>=10){$("choices").innerHTML="";const b=document.createElement("button");b.textContent="Finally, continue 😭";b.onclick=next;$("choices").appendChild(b)}
+}
+function answer(which){
+ const msgs={
+ hug:"🫂 A giant virtual hug is being prepared. Please hold your arms out dramatically.",
+ chocolate:"🍫 Chocolate delivery initiated. Imaginary calories do not count.",
+ nap:"😴 Nap mode approved. The bunny has tucked you in."
+ };
+ $("message").textContent=msgs[which]+" Okay, now one actual last thing…";
+ hearts(7);setTimeout(next,1200);
+}
+render();
+</script>
+</body>
+</html>
